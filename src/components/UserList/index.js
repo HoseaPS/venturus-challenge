@@ -28,9 +28,16 @@ class UserList extends Component {
   };
 
   componentDidMount() {
-    const { getUserListRequest, getPostListRequest } = this.props;
+    const { getUserListRequest } = this.props;
     getUserListRequest();
-    getPostListRequest();
+ 
+  }
+
+  componentDidUpdate(prevProps) {
+    const {userList, getPostListRequest} = this.props;
+    if (prevProps.userList.numberOfUsers !== userList.numberOfUsers) {
+      getPostListRequest();
+    }
   }
 
   updateQuery = (query) => {
@@ -60,6 +67,7 @@ class UserList extends Component {
     console.log(this.props);
 
     let showingUsers;
+    let posts;
     if (query) {
       const match = new RegExp(escapeRegExp(query), 'i');
       showingUsers = userList.data.filter(
@@ -67,6 +75,7 @@ class UserList extends Component {
       );
     } else {
       showingUsers = userList.data;
+      posts = userList.posts;
     }
 
     return (
@@ -109,7 +118,8 @@ class UserList extends Component {
               {showingUsers
                 .filter(user => user !== undefined)
                 .map((user, index, array) => {
-                  const LastPosi = array.length - 1;
+                  console.log(posts)
+
                   return (
                     <tr key={index}>
                       <td>{user.username}</td>
@@ -118,7 +128,7 @@ class UserList extends Component {
                       <td className="green-color">{!user.address ? '' : user.address.city}</td>
                       <td>Always</td>
                       <td>Every day</td>
-                      <td className="green-color">{array[LastPosi][index]}</td>
+                      <td className="green-color">{posts[index]}</td>
                       <td className="green-color">2</td>
                       <td>39</td>
                       <td>

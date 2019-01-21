@@ -37,12 +37,11 @@ export default function userList(state = INITIAL_STATE, action) {
       const numberOfUsers = state.numberOfUsers;
       const posts = [];
       for (let i = 1; i <= numberOfUsers; i++) {
-        posts.push(action.payload.data.filter(user => user.userId === i));
-        posts[posts.length - 1] = posts[posts.length - 1].length;
+        posts.push(action.payload.data.filter(user => user.userId === i).length);
       }
       return {
         ...state,
-        data: [...state.data, posts],
+        posts,
       };
     }
     case Types.ADD_REQUEST: {
