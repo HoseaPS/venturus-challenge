@@ -176,7 +176,7 @@ class UserList extends Component {
                       {!user.user.address ? '' : user.user.address.city}
                     </td>
                     <td>{user.rideType === undefined ? this.randomRideType() : user.rideType}</td>
-                    <td>{user.weekDay === undefined ? this.randomDays() : stringDays}</td>
+                    <td>{user.weekDay === undefined ? (user.user.type !== 'newUser' ? this.randomDays() : 'No day') : stringDays}</td>
                     <td className="green-color">{user.posts}</td>
                     <td className="green-color">{user.albums}</td>
                     <td>{user.photos}</td>

@@ -88,6 +88,7 @@ class NewUser extends Component {
               <div>
                 <label>
                   Username
+                  <input name="user[type]" type="hidden" value='newUser' />                  
                   <input name="user[id]" type="hidden" value={Math.random()} />
                   <input name="user[username]" type="text" required />
                 </label>
