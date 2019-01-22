@@ -5,18 +5,26 @@ import { Creators as UserListActions } from '../ducks/userList';
 
 export function* getUserList() {
   try {
-    const response = yield call(api.get, '/users');
-    yield put(UserListActions.getUserListSuccess(response.data));
-  } catch (err) {
-    console.log(err);
-  }
-}
+    const users = yield call(api.get, '/users');
+    let posts;
+    let albums;
+    let photos;
+    const usersAndPosts = [];
+    for (let i = 1; i <= users.data.length; i++) {
+      posts = yield call(api.get, `/posts?userId=${i}`);
+      albums = yield call(api.get, `/albums?userId=${i}`);
+      photos = yield call(api.get, `/photos?albumId=${i}`);
 
-export function* getPostList() {
-  try {
-    const response = yield call(api.get, '/posts');
-    yield put(UserListActions.getPostListSuccess(response.data));
+      usersAndPosts.push({
+        user: users.data[i - 1],
+        posts: posts.data.length,
+        albums: albums.data.length,
+        photos: photos.data.length,
+      });
+    }
+
+    yield put(UserListActions.getUserListSuccess(usersAndPosts));
   } catch (err) {
-    console.log(err);
+    yield put(UserListActions.getUserInfoFailure('Erro ao adicionar repositório'));
   }
 }

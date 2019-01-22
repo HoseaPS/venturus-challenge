@@ -11,7 +11,6 @@ export const Content = styled.div`
     font-size: 18px;
     align-items: center;
     justify-content: space-between;
-    width: 185px;
     position: relative;
 
     div.user-icon {
@@ -28,6 +27,7 @@ export const Content = styled.div`
 
     span {
       cursor: pointer;
+      margin: 0 15px;
     }
 
     i {

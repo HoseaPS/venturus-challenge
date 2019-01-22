@@ -2,11 +2,13 @@ import styled from 'styled-components';
 import 'font-awesome/css/font-awesome.css';
 
 import { Grid } from '../../styles/components';
+import { Spinner } from '../Loading/styles';
 
 export const TableList = styled.table`
   width: 100%;
   text-align: left;
   margin-top: 20px;
+  margin-bottom: 60px;
 
   thead th {
     font-size: 16px;
@@ -16,40 +18,57 @@ export const TableList = styled.table`
     border-bottom: 1px solid #000;
   }
 
-  tbody td {
-    border: none;
-    font-size: 16px;
-    padding: 15px;
-    line-height: 40px;
+  tbody {
+    td {
+      border: none;
+      font-size: 16px;
+      padding: 15px;
+      line-height: 40px;
 
-    &:last-child {
-      padding: 0;
+      &:last-child {
+        padding: 0;
 
-      button {
-        visibility: hidden;
-        border: none;
-        background: transparent;
-        font-size: 20px;
-        cursor: pointer;
+        button {
+          visibility: hidden;
+          border: none;
+          background: transparent;
+          font-size: 20px;
+          cursor: pointer;
+        }
+      }
+
+      &.green-color {
+        color: #32bca1;
       }
     }
 
-    &.green-color {
-      color: #32bca1;
+    tr {
+      &:nth-child(even) {
+        background: #f8f8f8;
+      }
+      &:hover {
+        background: #e3e3e3;
+
+        button {
+          visibility: visible;
+        }
+      }
     }
   }
+`;
 
-  tbody tr {
-    &:nth-child(even) {
-      background: #f8f8f8;
-    }
-    &:hover {
-      background: #e3e3e3;
+export const TrWrapper = styled.tr`
+  text-align: center;
 
-      button {
-        visibility: visible;
-      }
-    }
+  &.tr-wrapper:hover {
+    background: none;
+  }
+  td {
+    padding: 50px !important;
+  }
+
+  ${Spinner} {
+    height: 24px;
   }
 `;
 
@@ -81,6 +100,7 @@ export const Content = styled.div`
     display: flex;
     align-items: center;
     justify-content: space-between;
+    position: relative;
   }
 
   span:not(.line) {

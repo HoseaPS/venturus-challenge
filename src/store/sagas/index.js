@@ -2,11 +2,8 @@ import { all, takeLatest } from 'redux-saga/effects';
 
 import { Types as UserListTypes } from '../ducks/userList';
 
-import { getUserList, getPostList } from './userList';
+import { getUserList } from './userList';
 
 export default function* rootSaga() {
-  yield all([
-    takeLatest(UserListTypes.GET_USER_REQUEST, getUserList),
-    takeLatest(UserListTypes.GET_POST_REQUEST, getPostList),
-  ]);
+  yield all([takeLatest(UserListTypes.GET_USER_INFO_REQUEST, getUserList)]);
 }

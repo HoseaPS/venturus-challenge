@@ -1,8 +1,8 @@
 export const Types = {
-  GET_USER_REQUEST: 'userList/GET_USER_REQUEST',
-  GET_USER_SUCCESS: 'userList/GET_USER_SUCCESS',
-  GET_POST_REQUEST: 'postList/GET_POST_REQUEST',
-  GET_POST_SUCCESS: 'postList/GET_POST_SUCCESS',
+  GET_USER_INFO_REQUEST: 'userList/GET_USER_INFO_REQUEST',
+  GET_USER_INFO_SUCCESS: 'userList/GET_USER_INFO_SUCCESS',
+  GET_USER_FAILURE: 'userList/GET_USER_FAILURE',
+  CLEAR_BASE: 'userList/CLEAR_BASE',
   REMOVE: 'userList/REMOVE',
   ADD_REQUEST: 'newUser/ADD_REQUEST',
 };
@@ -10,39 +10,33 @@ export const Types = {
 const INITIAL_STATE = {
   data: [],
   newUsers: [],
-  posts: [],
-  numberOfUsers: 0,
+  loading: false,
+  error: null,
 };
 export default function userList(state = INITIAL_STATE, action) {
   switch (action.type) {
-    case Types.GET_USER_REQUEST: {
+    case Types.GET_USER_INFO_REQUEST: {
       return {
         ...state,
+        loading: true,
       };
     }
-    case Types.GET_USER_SUCCESS: {
-      const numberOfUsers = action.payload.data.length;
+    case Types.GET_USER_INFO_SUCCESS: {
       return {
         ...state,
+        loading: false,
+        error: null,
         data: action.payload.data.concat(state.newUsers),
-        numberOfUsers,
       };
     }
-    case Types.GET_POST_REQUEST: {
+    case Types.CLEAR_BASE: {
       return {
         ...state,
+        data: [],
       };
     }
-    case Types.GET_POST_SUCCESS: {
-      const numberOfUsers = state.numberOfUsers;
-      const posts = [];
-      for (let i = 1; i <= numberOfUsers; i++) {
-        posts.push(action.payload.data.filter(user => user.userId === i).length);
-      }
-      return {
-        ...state,
-        posts,
-      };
+    case Types.GET_USER_FAILURE: {
+      return { ...state, loading: false, error: action.payload.error };
     }
     case Types.ADD_REQUEST: {
       if (state.newUsers !== undefined) {
@@ -57,7 +51,10 @@ export default function userList(state = INITIAL_STATE, action) {
       };
     }
     case Types.REMOVE: {
-      return { ...state, data: state.data.filter(user => user.id !== action.payload.user.id) };
+      return {
+        ...state,
+        data: state.data.filter(user => user.user.id !== action.payload.user.user.id),
+      };
     }
     default: {
       return state;
@@ -66,17 +63,10 @@ export default function userList(state = INITIAL_STATE, action) {
 }
 
 export const Creators = {
-  getUserListRequest: () => ({ type: Types.GET_USER_REQUEST }),
+  getUserListRequest: () => ({ type: Types.GET_USER_INFO_REQUEST }),
 
   getUserListSuccess: data => ({
-    type: Types.GET_USER_SUCCESS,
-    payload: { data },
-  }),
-
-  getPostListRequest: () => ({ type: Types.GET_POST_REQUEST }),
-
-  getPostListSuccess: data => ({
-    type: Types.GET_POST_SUCCESS,
+    type: Types.GET_USER_INFO_SUCCESS,
     payload: { data },
   }),
 
@@ -85,8 +75,15 @@ export const Creators = {
     payload: { user },
   }),
 
+  clearBase: () => ({ type: Types.CLEAR_BASE }),
+
   addUserRequest: data => ({
     type: Types.ADD_REQUEST,
     payload: { data },
+  }),
+
+  getUserInfoFailure: error => ({
+    type: Types.GET_USER_FAILURE,
+    payload: { error },
   }),
 };

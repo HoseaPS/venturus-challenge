@@ -13,14 +13,41 @@ import Header from '../header/index';
 import Breadcrumbs from '../Breadcrumbs';
 import SportHeader from '../SportHeader';
 
-import { TableList, Search, Content } from './styles';
+import {
+  TableList, Search, Content, TrWrapper,
+} from './styles';
 
 import { Grid } from '../../styles/components';
+
+import Loading from '../Loading';
 
 class UserList extends Component {
   static propTypes = {
     getUserListRequest: PropTypes.func.isRequired,
     removeUser: PropTypes.func.isRequired,
+    clearBase: PropTypes.func.isRequired,
+    userList: PropTypes.shape({
+      data: PropTypes.arrayOf(
+        PropTypes.shape({
+          albums: PropTypes.number,
+          photos: PropTypes.number,
+          posts: PropTypes.number,
+          user: PropTypes.shape({
+            id: PropTypes.number,
+            name: PropTypes.string,
+            username: PropTypes.string,
+            email: PropTypes.string,
+            address: PropTypes.shape({
+              city: PropTypes.string,
+            }),
+          }),
+        }),
+      ),
+      error: PropTypes.oneOf([null, PropTypes.string]),
+      newUsers: PropTypes.arrayOf(PropTypes.object),
+      loading: PropTypes.bool,
+      photos: PropTypes.number,
+    }).isRequired,
   };
 
   state = {
@@ -30,18 +57,27 @@ class UserList extends Component {
   componentDidMount() {
     const { getUserListRequest } = this.props;
     getUserListRequest();
- 
   }
 
-  componentDidUpdate(prevProps) {
-    const {userList, getPostListRequest} = this.props;
-    if (prevProps.userList.numberOfUsers !== userList.numberOfUsers) {
-      getPostListRequest();
-    }
+  componentWillUnmount() {
+    const { clearBase } = this.props;
+    clearBase();
   }
 
   updateQuery = (query) => {
     this.setState({ query: query.trim() });
+  };
+
+  randomDays = () => {
+    const daysOfWeek = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+    const randomDay = daysOfWeek[Math.floor(Math.random() * daysOfWeek.length)];
+    return randomDay;
+  };
+
+  randomRideType = () => {
+    const typesOfRide = ['Always', 'Sometimes', 'Never'];
+    const randomRide = typesOfRide[Math.floor(Math.random() * typesOfRide.length)];
+    return randomRide;
   };
 
   confirmDelete = (user) => {
@@ -64,18 +100,14 @@ class UserList extends Component {
     const { userList } = this.props;
     const { query } = this.state;
 
-    console.log(this.props);
-
     let showingUsers;
-    let posts;
     if (query) {
       const match = new RegExp(escapeRegExp(query), 'i');
       showingUsers = userList.data.filter(
-        user => match.test(user.name) || match.test(user.username),
+        user => match.test(user.user.name) || match.test(user.user.username),
       );
     } else {
       showingUsers = userList.data;
-      posts = userList.posts;
     }
 
     return (
@@ -113,37 +145,54 @@ class UserList extends Component {
               <th>Photos</th>
               <th />
             </thead>
-
             <tbody>
-              {showingUsers
-                .filter(user => user !== undefined)
-                .map((user, index, array) => {
-                  console.log(posts)
-
-                  return (
-                    <tr key={index}>
-                      <td>{user.username}</td>
-                      <td>{user.name}</td>
-                      <td className="green-color">{user.email}</td>
-                      <td className="green-color">{!user.address ? '' : user.address.city}</td>
-                      <td>Always</td>
-                      <td>Every day</td>
-                      <td className="green-color">{posts[index]}</td>
-                      <td className="green-color">2</td>
-                      <td>39</td>
-                      <td>
-                        <button
-                          type="button"
-                          onClick={() => {
-                            this.confirmDelete(user);
-                          }}
-                        >
-                          <i className="fa fa-trash" />
-                        </button>
-                      </td>
-                    </tr>
-                  );
-                })}
+              {userList.loading && (
+                <TrWrapper className="tr-wrapper">
+                  <td colSpan="9">
+                    <Loading />
+                  </td>
+                </TrWrapper>
+              )}
+              {!!userList.error && (
+                <TrWrapper className="tr-wrapper">
+                  <td colSpan="9">
+                    <span style={{ color: 'red' }}>{userList.error}</span>
+                  </td>
+                </TrWrapper>
+              )}
+              {showingUsers.map((user) => {
+                let stringDays;
+                if (user.weekDay !== undefined && user.weekDay.constructor !== String) {
+                  stringDays = user.weekDay.join(', ');
+                } else {
+                  stringDays = user.weekDay;
+                }
+                return (
+                  <tr key={user.user.id}>
+                    <td>{user.user.username}</td>
+                    <td>{user.user.name}</td>
+                    <td className="green-color">{user.user.email}</td>
+                    <td className="green-color">
+                      {!user.user.address ? '' : user.user.address.city}
+                    </td>
+                    <td>{user.rideType === undefined ? this.randomRideType() : user.rideType}</td>
+                    <td>{user.weekDay === undefined ? this.randomDays() : stringDays}</td>
+                    <td className="green-color">{user.posts}</td>
+                    <td className="green-color">{user.albums}</td>
+                    <td>{user.photos}</td>
+                    <td>
+                      <button
+                        type="button"
+                        onClick={() => {
+                          this.confirmDelete(user);
+                        }}
+                      >
+                        <i className="fa fa-trash" />
+                      </button>
+                    </td>
+                  </tr>
+                );
+              })}
             </tbody>
           </TableList>
         </Grid>

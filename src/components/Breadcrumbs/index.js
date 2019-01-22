@@ -18,10 +18,12 @@ const Breadcrumbs = (props) => {
   const { lastLocation } = props;
   const { location } = props;
 
+  console.log(lastLocation);
+
   const currentPage = capitalizeLastWord(location.pathname);
 
   let previousPage = '';
-  if (lastLocation !== null) {
+  if (lastLocation !== null && lastLocation.pathname !== '/') {
     previousPage = capitalizeLastWord(lastLocation.pathname);
   }
 
@@ -31,10 +33,12 @@ const Breadcrumbs = (props) => {
         <Breadcrumb.Item className="home" href="#">
           <i className="fas fa-home" />
         </Breadcrumb.Item>
-        {lastLocation !== null && (
+        {lastLocation !== null && lastLocation.pathname !== '/' ? (
           <Breadcrumb.Item>
             <Link to={lastLocation.pathname}>{previousPage}</Link>
           </Breadcrumb.Item>
+        ) : (
+          ''
         )}
         <Breadcrumb.Item active>{currentPage}</Breadcrumb.Item>
       </Breadcrumb>
@@ -43,12 +47,15 @@ const Breadcrumbs = (props) => {
 };
 
 Breadcrumbs.propTypes = {
-  lastLocation: PropTypes.shape({
-    pathname: PropTypes.string,
-  }),
+  lastLocation: PropTypes.oneOf([
+    null,
+    PropTypes.shape({
+      pathname: PropTypes.string,
+    }),
+  ]),
   location: PropTypes.shape({
     pathname: PropTypes.string,
-  }),
+  }).isRequired,
 };
 
 export default withRouter(withLastLocation(Breadcrumbs));

@@ -88,38 +88,38 @@ class NewUser extends Component {
               <div>
                 <label>
                   Username
-                  <input name="id" type="hidden" value={Math.random()} />
-                  <input name="username" type="text" required />
+                  <input name="user[id]" type="hidden" value={Math.random()} />
+                  <input name="user[username]" type="text" required />
                 </label>
                 <label>
                   Name
-                  <input name="name" type="text" required />
+                  <input name="user[name]" type="text" required />
                 </label>
                 <label>
                   E-mail
-                  <input name="email" type="email" required />
+                  <input name="user[email]" type="email" required />
                 </label>
               </div>
               <div>
                 <label className="city">
                   City
                   <span>optional</span>
-                  <input name="address[city]" type="text" />
+                  <input name="user[address][city]" type="text" />
                 </label>
                 <div className="radio-input">
                   <span>Ride in group?</span>
                   <label>
-                    <input type="radio" name="ride-type" value="Always" required />
+                    <input type="radio" name="rideType" value="Always" required />
                     <span className="checkmark" />
                     Always
                   </label>
                   <label>
-                    <input type="radio" name="ride-type" value="Sometimes" />
+                    <input type="radio" name="rideType" value="Sometimes" />
                     <span className="checkmark" />
                     Sometimes
                   </label>
                   <label>
-                    <input type="radio" name="ride-type" value="Never" />
+                    <input type="radio" name="rideType" value="Never" />
                     <span className="checkmark" />
                     Never
                   </label>
@@ -127,37 +127,37 @@ class NewUser extends Component {
                 <div className="checkbox-input">
                   <span>Days of the week</span>
                   <label>
-                    <input type="checkbox" name="week-day" value="Sun" />
+                    <input type="checkbox" name="weekDay" value="Sun" />
                     <span className="checkmark" />
                     Sun
                   </label>
                   <label>
-                    <input type="checkbox" name="week-day" value="Mon" />
+                    <input type="checkbox" name="weekDay" value="Mon" />
                     <span className="checkmark" />
                     Mon
                   </label>
                   <label>
-                    <input type="checkbox" name="week-day" value="Tue" />
+                    <input type="checkbox" name="weekDay" value="Tue" />
                     <span className="checkmark" />
                     Tue
                   </label>
                   <label>
-                    <input type="checkbox" name="week-day" value="Wed" />
+                    <input type="checkbox" name="weekDay" value="Wed" />
                     <span className="checkmark" />
                     Wed
                   </label>
                   <label>
-                    <input type="checkbox" name="week-day" value="Thu" />
+                    <input type="checkbox" name="weekDay" value="Thu" />
                     <span className="checkmark" />
                     Thu
                   </label>
                   <label>
-                    <input type="checkbox" name="week-day" value="Fri" />
+                    <input type="checkbox" name="weekDay" value="Fri" />
                     <span className="checkmark" />
                     Fri
                   </label>
                   <label>
-                    <input type="checkbox" name="week-day" value="Sat" />
+                    <input type="checkbox" name="weekDay" value="Sat" />
                     <span className="checkmark" />
                     Sat
                   </label>
